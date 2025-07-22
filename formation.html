@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test de Sélection Chatter OnlyFans</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .step-content {
+            transition: opacity 0.3s ease-in-out;
+        }
+        .typing-text-container {
+            background-color: #f0fdf4;
+            border: 1px solid #dcfce7;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            font-size: 1.125rem;
+            line-height: 1.75rem;
+            font-weight: 500;
+            color: #047857; /* Darker teal for better visibility */
+            user-select: none;
+            min-height: 150px; /* Sufficient height for the phrase */
+            display: flex;
+            flex-wrap: wrap;
+            align-content: flex-start;
+            word-break: break-word; /* Ensure long words break if needed */
+        }
+        .typing-text-container span {
+            display: inline-block; /* Essential for individual character styling and proper spacing */
+            white-space: pre-wrap; /* Preserve whitespace and allow wrapping */
+        }
+        .typing-input {
+            font-size: 1.125rem;
+            line-height: 1.75rem;
+        }
+        .correct-char {
+            color: #16a34a;
+        }
+        .incorrect-char {
+            color: #dc2626;
+            text-decoration: underline;
+        }
+        .active-char {
+            background-color: #bfdbfe;
+            border-radius: 3px;
+        }
+        .step-indicator {
+            transition: all 0.3s ease;
+        }
+        .step-indicator.active {
+            background-color: #0d9488;
+            color: white;
+            border-color: #0d9488;
+        }
+        .step-indicator.completed {
+            background-color: #047857;
+            color: white;
+            border-color: #047857;
+        }
+        .progress-bar-fill {
+            transition: width 0.4s ease-in-out;
+        }
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            width: 80%;
+            max-width: 500px;
+            text-align: center;
+        }
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close-button:hover,
+        .close-button:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="bg-stone-100 text-gray-800 flex items-center justify-center min-h-screen p-4">
+
+    <main class="container mx-auto max-w-4xl w-full">
+        <div id="test-container" class="bg-white rounded-2xl shadow-xl p-6 sm:p-10 transition-all duration-300">
+            
+            <!-- Progress Bar and Indicators -->
+            <div id="progress-section" class="mb-8 hidden">
+                <div class="flex justify-between items-center mb-4">
+                    <div id="step-1-indicator" class="step-indicator flex items-center justify-center w-10 h-10 rounded-full border-2 border-gray-300 bg-white">1</div>
+                    <div class="flex-1 h-1 bg-gray-200 mx-2">
+                        <div id="progress-bar" class="bg-teal-600 h-1 rounded-full progress-bar-fill" style="width: 0%;"></div>
+                    </div>
+                    <div id="step-2-indicator" class="step-indicator flex items-center justify-center w-10 h-10 rounded-full border-2 border-gray-300 bg-white">2</div>
+                    <div class="flex-1 h-1 bg-gray-200 mx-2"></div>
+                    <div id="step-3-indicator" class="step-indicator flex items-center justify-center w-10 h-10 rounded-full border-2 border-gray-300 bg-white">3</div>
+                     <div class="flex-1 h-1 bg-gray-200 mx-2"></div>
+                    <div id="step-4-indicator" class="step-indicator flex items-center justify-center w-10 h-10 rounded-full border-2 border-gray-300 bg-white">4</div>
+                </div>
+            </div>
+
+            <!-- Étape d'Introduction -->
+            <div id="step-intro" class="step-content">
+                <h1 class="text-3xl font-bold text-center text-emerald-700 mb-2">Test de Sélection pour Chatter OnlyFans</h1>
+                <p class="text-center text-gray-500 mb-6">Évaluez vos compétences clés pour le succès</p>
+                <div class="bg-stone-50 p-6 rounded-lg border border-stone-200">
+                    <h2 class="text-xl font-semibold mb-3 text-gray-700">Bienvenue, futur(e) Chatter !</h2>
+                    <p class="mb-4 text-gray-600">Ce test est conçu pour évaluer tes compétences essentielles pour exceller en tant que chatter : ta rapidité d'écriture, ta logique de réponse et ta compréhension des dynamiques sur OnlyFans.</p>
+                    <h3 class="font-semibold text-gray-700 mb-2">Déroulé du test :</h3>
+                    <ul class="list-disc list-inside space-y-2 text-gray-600">
+                        <li><strong>1. Tes Informations</strong> - Nom, prénom, adresse e-mail.</li>
+                        <li><strong>2. Vitesse d'Écriture</strong> - Tu devras taper une phrase dans un temps imparti. Un minuteur sera visible. L'objectif est d'atteindre 30 mots par minute (MPM) avec une bonne précision.</li>
+                        <li><strong>3. Logique de Réponse</strong> - Des mises en situation concrètes sur OnlyFans, où tu devras rédiger la meilleure réponse possible.</li>
+                        <li><strong>4. Réflexion & Stratégie</strong> - Des questions ouvertes pour évaluer ta compréhension des enjeux du chatting.</li>
+                        <li><strong>Résultats Finaux</strong> - À la fin, un récapitulatif de tes performances s'affichera.</li>
+                    </ul>
+                    <p class="mt-4 text-gray-600 font-semibold">Lis attentivement chaque section. Bonne chance !</p>
+                    <p class="mt-6 p-3 bg-yellow-50 text-yellow-800 rounded-lg border border-yellow-200">
+                        <strong>Important :</strong> Veuillez réaliser ce test sur un **ordinateur** pour une expérience optimale, notamment pour le test de vitesse d'écriture.
+                    </p>
+                </div>
+                <div class="mt-8 text-center">
+                    <button onclick="startTest()" class="bg-emerald-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-emerald-700 transition-colors duration-300 shadow-md">Démarrer le Test</button>
+                </div>
+            </div>
+
+            <!-- Partie 0 : Informations Personnelles -->
+            <div id="step-personal-info" class="step-content hidden">
+                <h2 class="text-2xl font-bold mb-4 text-emerald-700">Partie 1 : Tes Informations</h2>
+                <p class="text-gray-500 mb-6">Veuillez remplir ces informations pour que nous puissions te recontacter si ton test nous convient.</p>
+                <div class="bg-stone-50 p-6 rounded-lg border border-stone-200 space-y-4">
+                    <div>
+                        <label for="full-name" class="block text-gray-700 text-sm font-bold mb-2">Nom & Prénom :</label>
+                        <input type="text" id="full-name" class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-emerald-500" placeholder="Ex: Jean Dupont">
+                    </div>
+                    <div>
+                        <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Adresse E-mail :</label>
+                        <input type="email" id="email" class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-emerald-500" placeholder="Ex: ton.email@exemple.com">
+                    </div>
+                     <div>
+                        <label for="whatsapp" class="block text-gray-700 text-sm font-bold mb-2">Numéro WhatsApp (optionnel) :</label>
+                        <input type="tel" id="whatsapp" class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:ring-2 focus:ring-emerald-500" placeholder="Ex: +33612345678">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Partie 1 : Vitesse d'Écriture -->
+            <div id="step-writing-speed" class="step-content hidden">
+                <h2 class="text-2xl font-bold mb-4 text-emerald-700">Partie 2 : Vitesse d'Écriture & Fluidité</h2>
+                <p class="text-gray-500 mb-6">Consigne : Ouvre un chronomètre sur ton téléphone et règle-le sur 1 minute. Tape le texte ci-dessous le plus rapidement et précisément possible pendant cette minute. Le minuteur démarrera dès que tu commences à taper. L'objectif est d'atteindre 30 mots par minute (MPM) avec une bonne précision.</p>
+                <div class="bg-stone-50 p-6 rounded-lg border border-stone-200 mb-6">
+                    <p class="font-semibold text-gray-700 mb-2">Temps restant : <span id="timer" class="text-emerald-600 font-bold">60</span> secondes</p>
+                    <div id="typing-text" class="typing-text-container mb-4"></div>
+                    <textarea id="typing-input" class="typing-input w-full p-3 border border-stone-300 rounded-lg h-40 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition" placeholder="Commence à taper ici..." disabled></textarea>
+                </div>
+            </div>
+
+            <!-- Partie 3 : Mises en Situation (Logique de Réponse) -->
+            <div id="step-situational" class="step-content hidden">
+                <h2 class="text-2xl font-bold mb-4 text-emerald-700">Partie 3 : Mises en Situation (Logique de Réponse)</h2>
+                <p class="text-gray-500 mb-6">Consigne : Rédige la réponse exacte que tu enverrais au fan dans chaque situation. Pense au ton (amical, professionnel, engageant) et à l'utilisation appropriée des emojis.</p>
+                <div class="bg-stone-50 p-6 rounded-lg border border-stone-200 space-y-6">
+                    <div>
+                        <p class="font-semibold text-gray-700 mb-2">Scénario 1 : Demande de Contenu Explicite Inappropriée</p>
+                        <p class="text-gray-600 mb-2">Le fan écrit : "Salut, envoie une photo de ton vagin tout de suite. Je paie bien."</p>
+                        <p class="text-gray-600 mb-2 text-sm italic">Quoi faire : Explique comment tu gérerais cette demande. Quelle serait ta stratégie pour refuser poliment tout en redirigeant le fan vers une interaction appropriée ?</p>
+                        <textarea id="situational-answer1" class="w-full p-3 border border-stone-300 rounded-lg h-28 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition" placeholder="Ta réponse : (Comment refuser poliment et rediriger ?)"></textarea>
+                    </div>
+                    <div>
+                        <p class="font-semibold text-gray-700 mb-2">Scénario 2 : Doute sur l'Authenticité de la Modèle</p>
+                        <p class="text-gray-600 mb-2">Le fan écrit : "C'est pas vrai, tu n'es pas réelle. C'est un mec qui répond à ta place, c'est sûr."</p>
+                        <p class="text-gray-600 mb-2 text-sm italic">Quoi faire : Comment prouverais-tu l'authenticité de la modèle de manière créative et professionnelle, sans divulguer d'informations personnelles ?</p>
+                        <textarea id="situational-answer2" class="w-full p-3 border border-stone-300 rounded-lg h-28 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition" placeholder="Ta réponse : (Comment le convaincre que c'est bien la modèle qui parle ?)"></textarea>
+                    </div>
+                    <div>
+                        <p class="font-semibold text-gray-700 mb-2">Scénario 3 : Négociation de Prix</p>
+                        <p class="text-gray-600 mb-2">Contexte : Tu as proposé une vidéo exclusive à 35€.</p>
+                        <p class="text-gray-600 mb-2">Le fan écrit : "Hmm, 35€ c'est un peu cher... Je sais pas trop."</p>
+                        <p class="text-gray-600 mb-2 text-sm italic">Quoi faire : Explique comment tu justifierais la valeur du contenu sans baisser le prix. Quelles émotions ou bénéfices mettrais-tu en avant ?</p>
+                        <textarea id="situational-answer3" class="w-full p-3 border border-stone-300 rounded-lg h-28 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition" placeholder="Ta réponse : (Comment justifier la valeur sans baisser le prix ?)"></textarea>
+                    </div>
+                    <div>
+                        <p class="font-semibold text-gray-700 mb-2">Scénario 4 : Demande de Contenu Gratuit</p>
+                        <p class="text-gray-600 mb-2">Le fan écrit : "J'ai plus d'argent ce mois-ci, mais j'ai trop envie de te voir. Tu peux m'en envoyer un petit truc gratuit pour me faire patienter ?"</p>
+                        <p class="text-gray-600 mb-2 text-sm italic">Quoi faire : Comment gérerais-tu cette demande pour maintenir la relation et l'intérêt du fan, sans dévaloriser le contenu payant ?</p>
+                        <textarea id="situational-answer4" class="w-full p-3 border border-stone-300 rounded-lg h-28 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition" placeholder="Ta réponse : (Comment maintenir la relation sans donner de contenu gratuit ?)"></textarea>
+                    </div>
+                    <div>
+                        <p class="font-semibold text-gray-700 mb-2">Scénario 5 : Tentative de Changement de Plateforme</p>
+                        <p class="text-gray-600 mb-2">Le fan écrit : "J'adore te parler ! On peut continuer sur Snap ou Insta ? C'est plus simple."</p>
+                        <p class="text-gray-600 mb-2 text-sm italic">Quoi faire : Explique comment tu convaincrais le fan de rester sur OnlyFans. Quels arguments utiliserais-tu pour souligner les avantages de la plateforme ?</p>
+                        <textarea id="situational-answer5" class="w-full p-3 border border-stone-300 rounded-lg h-28 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition" placeholder="Ta réponse : (Comment le garder sur OnlyFans ?)"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Partie 4 : Réflexion & Stratégie -->
+            <div id="step-reflection" class="step-content hidden">
+                <h2 class="text-2xl font-bold mb-4 text-emerald-700">Partie 4 : Réflexion & Stratégie</h2>
+                <p class="text-gray-500 mb-6">Consigne : Réponds brièvement à ces questions en te basant sur ta logique et ton expérience. Il n'y a pas de réponse unique, mais nous cherchons à comprendre ta manière de penser.</p>
+                <div class="bg-stone-50 p-6 rounded-lg border border-stone-200 space-y-6">
+                    <div>
+                        <p class="font-semibold text-gray-700 mb-2">1. Selon toi, quel est l'équilibre idéal entre "construire une relation" et "vendre du contenu" ?</p>
+                        <textarea id="reflection-answer1" class="w-full p-3 border border-stone-300 rounded-lg h-28 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition" placeholder="Ta réponse..."></textarea>
+                    </div>
+                    <div>
+                        <p class="font-semibold text-gray-700 mb-2">2. Comment gérerais-tu un "gros dépensier" (un fan qui achète beaucoup) pour qu'il reste fidèle sur le long terme ?</p>
+                        <textarea id="reflection-answer2" class="w-full p-3 border border-stone-300 rounded-lg h-28 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition" placeholder="Ta réponse..."></textarea>
+                    </div>
+                     <div>
+                        <p class="font-semibold text-gray-700 mb-2">3. Pourquoi est-il crucial de poser des questions aux fans et de les écouter attentivement ?</p>
+                        <textarea id="reflection-answer3" class="w-full p-3 border border-stone-300 rounded-lg h-28 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition" placeholder="Ta réponse..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Étape des Résultats -->
+            <div id="step-results" class="step-content hidden">
+                <h2 class="text-2xl font-bold text-center mb-4 text-emerald-700">Tes Résultats du Test</h2>
+                <div class="bg-stone-50 p-6 rounded-lg border border-stone-200 text-gray-700 space-y-4">
+                    <p class="text-lg font-semibold">Tes Informations :</p>
+                    <p>Nom & Prénom : <span id="display-full-name" class="font-bold text-gray-800"></span></p>
+                    <p>Adresse E-mail : <span id="display-email" class="font-bold text-gray-800"></span></p>
+                    <p>Numéro WhatsApp : <span id="display-whatsapp" class="font-bold text-gray-800"></span></p>
+
+                    <p class="text-lg font-semibold mt-6">Partie 2 : Vitesse d'Écriture :</p>
+                    <p>Mots par minute (MPM) : <span id="wpm-result" class="font-bold text-emerald-600"></span></p>
+                    <p>Précision : <span id="accuracy-result" class="font-bold text-emerald-600"></span></p>
+                    
+                    <p class="text-lg font-semibold mt-6">Partie 3 : Mises en Situation (Tes Réponses) :</p>
+                    <div id="situational-answers-display" class="space-y-4 text-sm"></div>
+
+                    <p class="text-lg font-semibold mt-6">Partie 4 : Réflexion & Stratégie (Tes Réponses) :</p>
+                    <div id="reflection-answers-display" class="space-y-4 text-sm"></div>
+
+                    <p class="text-lg font-semibold mt-6">Temps Total du Test (à renseigner manuellement) :</p>
+                    <input type="text" id="total-test-time-input" class="w-full p-3 border border-stone-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition" placeholder="Ex: 30 minutes">
+                    <p class="text-sm text-gray-500 mt-2">Veuillez indiquer le temps total que vous avez mis pour compléter l'ensemble du test.</p>
+                </div>
+                <p class="text-center text-gray-600 mt-6"><strong>Important :</strong> Veuillez copier l'intégralité de cette page (ou faire une capture d'écran) et l'envoyer par e-mail à la personne qui vous a fourni ce test. Nous vous recontacterons si votre profil correspond à nos attentes !</p>
+                <div class="mt-8 text-center">
+                    <button onclick="sendEmail()" class="bg-emerald-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-emerald-700 transition-colors duration-300 shadow-md">Envoyer les résultats par e-mail</button>
+                </div>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div id="navigation-buttons" class="mt-8 flex justify-between">
+                <button id="prev-btn" onclick="prevStep()" class="bg-gray-300 text-gray-700 font-bold py-2 px-6 rounded-lg hover:bg-gray-400 transition-colors duration-300 hidden">Précédent</button>
+                <button id="next-btn" onclick="nextStep()" class="bg-emerald-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-emerald-700 transition-colors duration-300 ml-auto hidden">Suivant</button>
+                <button id="submit-btn" onclick="showResults()" class="bg-emerald-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-emerald-700 transition-colors duration-300 ml-auto hidden"></button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal for Email Fallback -->
+    <div id="emailModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal()">&times;</span>
+            <h3 class="text-xl font-bold mb-4 text-red-700">Problème d'envoi d'e-mail</h3>
+            <p class="mb-4 text-gray-700">Il semble que votre client de messagerie n'ait pas pu s'ouvrir automatiquement.</p>
+            <p class="mb-4 text-gray-700">Veuillez copier les résultats ci-dessous et les coller manuellement dans un nouvel e-mail à <strong class="text-emerald-600">evan.gssln@gmail.com</strong>.</p>
+            <textarea id="resultsToCopy" class="w-full p-3 border border-stone-300 rounded-lg h-40 mb-4" readonly></textarea>
+            <button onclick="copyResults()" class="bg-emerald-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-emerald-700 transition-colors duration-300">Copier les résultats</button>
+        </div>
+    </div>
+
+    <script>
+        let currentStepIndex = 0;
+        // Total content steps (excluding intro and results)
+        const totalContentSteps = 4;
+        // All step IDs including intro and results
+        const steps = ['step-intro', 'step-personal-info', 'step-writing-speed', 'step-situational', 'step-reflection', 'step-results'];
+        const stepElements = steps.map(id => document.getElementById(id));
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const submitBtn = document.getElementById('submit-btn');
+        const progressBar = document.getElementById('progress-bar');
+        const indicators = Array.from({ length: totalContentSteps }, (_, i) => document.getElementById(`step-${i + 1}-indicator`));
+
+        let typingStartTime;
+        let timerInterval;
+        const typingTestDuration = 60; // seconds
+        let timeLeft = typingTestDuration;
+        // Phrase de l'utilisateur (48 mots)
+        const typingPhrase = "Le soleil brille haut dans le ciel bleu, projetant une lumière dorée sur les champs de blé qui ondulent doucement sous la brise estivale. Les oiseaux chantent joyeusement dans les arbres, leurs mélodies se mêlant au bourdonnement des abeilles qui butinent les fleurs sauvages. C'est une journée parfaite pour une promenade.";
+        
+        let typedChars = 0;
+        let correctChars = 0;
+
+        // Function to update the UI based on the current step
+        function updateUI() {
+            // Hide all steps first
+            stepElements.forEach((el, i) => {
+                el.classList.add('hidden');
+            });
+            // Show the current step
+            stepElements[currentStepIndex].classList.remove('hidden');
+
+            // Manage navigation button visibility
+            prevBtn.classList.toggle('hidden', currentStepIndex === 0 || currentStepIndex === steps.length - 1);
+            nextBtn.classList.toggle('hidden', currentStepIndex === 0 || currentStepIndex === steps.length - 2 || currentStepIndex === steps.length - 1);
+            submitBtn.classList.toggle('hidden', currentStepIndex !== steps.length - 2);
+
+            // Manage progress section visibility and button text
+            if (currentStepIndex === 0) { // Intro step
+                document.getElementById('progress-section').classList.add('hidden');
+            } else if (currentStepIndex === steps.length - 2) { // Last content step (Reflection)
+                submitBtn.textContent = 'Afficher les résultats et envoyer les résultats';
+                document.getElementById('progress-section').classList.remove('hidden');
+            } else if (currentStepIndex === steps.length - 1) { // Results step
+                document.getElementById('progress-section').classList.add('hidden'); // Hide progress bar on results page
+            } else { // All other content steps
+                document.getElementById('progress-section').classList.remove('hidden');
+                nextBtn.textContent = 'Suivant';
+            }
+
+            // Update progress indicators
+            indicators.forEach((indicator, index) => {
+                indicator.classList.remove('active', 'completed');
+                if (index < currentStepIndex - 1) { // -1 because personal info is step 1, but indicator is 1
+                    indicator.classList.add('completed');
+                } else if (index === currentStepIndex - 1) {
+                    indicator.classList.add('active');
+                }
+            });
+
+            // Update progress bar fill
+            const progressPercentage = currentStepIndex > 1 ? ((currentStepIndex - 1) / totalContentSteps) * 100 : 0;
+            progressBar.style.width = `${progressPercentage}%`;
+
+            // Scroll to top of page for better UX
+            window.scrollTo(0, 0);
+        }
+
+        // Function to start the test from the intro page
+        function startTest() {
+            currentStepIndex = 1; // Move to personal info step
+            updateUI();
+        }
+
+        // Function to navigate to the next step
+        function nextStep() {
+            // Disable inputs of the current step before moving forward
+            if (currentStepIndex > 0 && currentStepIndex < steps.length - 1) { // Not intro or results step
+                const currentStepElement = stepElements[currentStepIndex];
+                const inputs = currentStepElement.querySelectorAll('input, textarea');
+                inputs.forEach(input => {
+                    input.readOnly = true; // Make read-only
+                    input.style.backgroundColor = '#e5e7eb'; // Grey out to indicate read-only
+                });
+            }
+
+            if (currentStepIndex < steps.length - 1) {
+                currentStepIndex++;
+                updateUI();
+                // If moving to typing test, initialize it
+                if (steps[currentStepIndex] === 'step-writing-speed') {
+                    initTypingTest();
+                }
+            }
+        }
+
+        // Function to navigate to the previous step
+        function prevStep() {
+            // Re-enable inputs of the current step when going back
+            if (currentStepIndex > 0 && currentStepIndex < steps.length - 1) {
+                const currentStepElement = stepElements[currentStepIndex];
+                const inputs = currentStepElement.querySelectorAll('input, textarea');
+                inputs.forEach(input => {
+                    input.readOnly = false;
+                    input.style.backgroundColor = ''; // Remove grey background
+                });
+            }
+
+            if (currentStepIndex > 0) {
+                currentStepIndex--;
+                updateUI();
+                // If moving away from typing test, clear its interval
+                if (steps[currentStepIndex + 1] === 'step-writing-speed' && timerInterval) {
+                    clearInterval(timerInterval);
+                    timerInterval = null;
+                }
+            }
+        }
+
+        // Initialize the typing test section
+        function initTypingTest() {
+            const typingTextEl = document.getElementById('typing-text');
+            const typingInputEl = document.getElementById('typing-input');
+            const timerEl = document.getElementById('timer');
+
+            // Populate the display area with the phrase, wrapped in spans for character-level styling
+            typingTextEl.innerHTML = typingPhrase.split('').map(char => `<span>${char}</span>`).join('');
+            
+            typingInputEl.value = ''; // Clear previous input
+            typingInputEl.disabled = false; // Enable input field
+            typingInputEl.focus(); // Focus on the input field
+
+            timeLeft = typingTestDuration; // Reset timer
+            timerEl.textContent = timeLeft; // Update timer display
+
+            typedChars = 0; // Reset typed character count
+            correctChars = 0; // Reset correct character count
+
+            // Clear any existing timer interval to prevent multiple timers running
+            if (timerInterval) {
+                clearInterval(timerInterval);
+            }
+
+            let testStarted = false; // Flag to track if the test has started (first key press)
+
+            // Event listener for input in the typing area
+            typingInputEl.oninput = (e) => {
+                if (!testStarted) {
+                    typingStartTime = new Date().getTime(); // Record start time
+                    // Start the countdown timer
+                    timerInterval = setInterval(() => {
+                        timeLeft--;
+                        timerEl.textContent = timeLeft;
+                        if (timeLeft <= 0) {
+                            clearInterval(timerInterval); // Stop the timer
+                            timerInterval = null;
+                            typingInputEl.disabled = true; // Disable input
+                            calculateTypingResults(); // Calculate and display results
+                        }
+                    }, 1000); // Update every second
+                    testStarted = true;
+                }
+
+                if (timeLeft <= 0) return; // Stop processing input if time is up
+
+                const typedValue = e.target.value;
+                const allCharSpans = typingTextEl.querySelectorAll('span');
+
+                typedChars = typedValue.length; // Total characters typed
+                correctChars = 0; // Reset for recalculation in this input event
+
+                // Loop through the original phrase characters to apply styling based on typed input
+                for (let i = 0; i < typingPhrase.length; i++) {
+                    const charSpan = allCharSpans[i];
+                    const originalChar = typingPhrase[i];
+                    const typedChar = typedValue[i]; // Get the typed character at this position
+
+                    // Clear all previous styling classes for this span
+                    charSpan.classList.remove('correct-char', 'incorrect-char', 'active-char');
+
+                    if (i < typedValue.length) { // If this character position has been typed
+                        if (typedChar === originalChar) {
+                            charSpan.classList.add('correct-char'); // Mark as correct
+                            correctChars++; // Increment correct count
+                        } else {
+                            charSpan.classList.add('incorrect-char'); // Mark as incorrect
+                        }
+                    }
+                }
+
+                // Set 'active-char' class to highlight the next character to be typed
+                if (typedValue.length < typingPhrase.length) {
+                    allCharSpans[typedValue.length].classList.add('active-char');
+                }
+                // Ensure no 'active-char' on characters beyond the current typing position
+                for (let i = typedValue.length + 1; i < allCharSpans.length; i++) {
+                    allCharSpans[i].classList.remove('active-char');
+                }
+            };
+        }
+
+        // Function to calculate and display typing results
+        function calculateTypingResults() {
+            const typedText = document.getElementById('typing-input').value;
+            // Split by one or more whitespace characters, then filter out empty strings
+            const words = typedText.split(/\s+/).filter(word => word.length > 0);
+            
+            // Calculate Words Per Minute (WPM)
+            const wpm = Math.round((words.length / typingTestDuration) * 60);
+            
+            // Calculate Accuracy: (correct characters / total characters typed) * 100
+            const accuracy = typedChars > 0 ? Math.round((correctChars / typedChars) * 100) : 0;
+
+            document.getElementById('wpm-result').textContent = `${wpm} MPM`;
+            document.getElementById('accuracy-result').textContent = `${accuracy}%`;
+        }
+
+        // Function to compile and display all test results
+        function showResults() {
+            // Disable inputs of the current step (reflection) before showing results
+            const currentStepElement = stepElements[currentStepIndex];
+            const inputs = currentStepElement.querySelectorAll('input, textarea');
+            inputs.forEach(input => {
+                input.readOnly = true;
+                input.style.backgroundColor = '#e5e7eb';
+            });
+
+            // Populate Personal Info in results
+            document.getElementById('display-full-name').textContent = document.getElementById('full-name').value.trim() || 'Non renseigné';
+            document.getElementById('display-email').textContent = document.getElementById('email').value.trim() || 'Non renseigné';
+            document.getElementById('display-whatsapp').textContent = document.getElementById('whatsapp').value.trim() || 'Non renseigné';
+
+
+            // Calculate and display Typing Results if not already done (e.g., if user navigated away before timer ended)
+            if (timeLeft > 0 && timerInterval) { // If timer was still running
+                clearInterval(timerInterval);
+                timerInterval = null;
+                document.getElementById('typing-input').disabled = true;
+                calculateTypingResults();
+            } else if (timeLeft === 0 && !document.getElementById('typing-input').disabled) { // If timer ran out but results not calculated
+                 calculateTypingResults();
+            }
+
+            // Populate Situational Answers in results
+            const situationalAnswersDisplay = document.getElementById('situational-answers-display');
+            situationalAnswersDisplay.innerHTML = ''; // Clear previous content
+            const situationalQuestions = [
+                "Scénario 1 (Contenu Explicite) : \"Salut, envoie une photo de ton vagin tout de suite. Je paie bien.\"",
+                "Scénario 2 (Doute Authent.) : \"C'est pas vrai, tu n'es pas réelle. C'est un mec qui répond à ta place, c'est sûr.\"",
+                "Scénario 3 (Négociation Prix) : \"Hmm, 35€ c'est un peu cher... Je sais pas trop.\"",
+                "Scénario 4 (Contenu Gratuit) : \"Tu peux m'en envoyer un petit truc gratuit pour me faire patienter ?\"",
+                "Scénario 5 (Changement Plateforme) : \"On peut continuer sur Snap ou Insta ? C'est plus simple.\""
+            ];
+            const situationalAnswerIds = [
+                'situational-answer1', 'situational-answer2', 'situational-answer3',
+                'situational-answer4', 'situational-answer5'
+            ];
+            situationalAnswerIds.forEach((id, index) => {
+                const answer = document.getElementById(id).value.trim();
+                situationalAnswersDisplay.innerHTML += `
+                    <div class="mb-2">
+                        <p class="font-medium text-gray-600">${situationalQuestions[index]}</p>
+                        <p class="text-gray-800 italic ml-4">Ta réponse : "${answer || 'Non répondu'}"</p>
+                    </div>
+                `;
+            });
+
+            // Populate Reflection Answers in results
+            const reflectionAnswersDisplay = document.getElementById('reflection-answers-display');
+            reflectionAnswersDisplay.innerHTML = ''; // Clear previous content
+            const reflectionQuestions = [
+                "1. Selon toi, quel est l'équilibre idéal entre \"construire une relation\" et \"vendre du contenu\" ?",
+                "2. Comment gérerais-tu un \"gros dépensier\" (un fan qui achète beaucoup) pour qu'il reste fidèle sur le long terme ?",
+                "3. Pourquoi est-il crucial de poser des questions aux fans et de les écouter attentivement ?"
+            ];
+            const reflectionAnswerIds = ['reflection-answer1', 'reflection-answer2', 'reflection-answer3'];
+            reflectionAnswerIds.forEach((id, index) => {
+                const answer = document.getElementById(id).value.trim();
+                reflectionAnswersDisplay.innerHTML += `
+                    <div class="mb-2">
+                        <p class="font-medium text-gray-600">${reflectionQuestions[index]}</p>
+                        <p class="text-gray-800 italic ml-4">Ta réponse : "${answer || 'Non répondu'}"</p>
+                    </div>
+                `;
+            });
+            
+            currentStepIndex = steps.length - 1; // Move to results step
+            updateUI();
+        }
+
+        // Function to send email with test results
+        function sendEmail() {
+            const fullName = document.getElementById('display-full-name').textContent;
+            const userEmail = document.getElementById('display-email').textContent; // This is the sender's email
+            const whatsapp = document.getElementById('display-whatsapp').textContent; // Candidate's WhatsApp
+            const recipientEmail = "evan.gssln@gmail.com"; // Fixed recipient email as requested
+            const wpm = document.getElementById('wpm-result').textContent;
+            const accuracy = document.getElementById('accuracy-result').textContent;
+            const totalTime = document.getElementById('total-test-time-input').value.trim();
+
+            let emailBody = `Résultats du Test de Sélection Chatter OnlyFans\n\n`;
+            emailBody += `Informations Personnelles:\n`;
+            emailBody += `Nom & Prénom: ${fullName}\n`;
+            emailBody += `Adresse E-mail du Candidat: ${userEmail}\n`;
+            emailBody += `Numéro WhatsApp: ${whatsapp}\n\n`; // Include WhatsApp
+
+            emailBody += `Partie 2 : Vitesse d'Écriture:\n`;
+            emailBody += `Mots par minute (MPM): ${wpm}\n`;
+            emailBody += `Précision: ${accuracy}\n\n`;
+
+            emailBody += `Partie 3 : Mises en Situation (Vos Réponses):\n`;
+            const situationalQuestions = [
+                "Scénario 1 (Contenu Explicite) : \"Salut, envoie une photo de ton vagin tout de suite. Je paie bien.\"",
+                "Scénario 2 (Doute Authent.) : \"C'est pas vrai, tu n'es pas réelle. C'est un mec qui répond à ta place, c'est sûr.\"",
+                "Scénario 3 (Négociation Prix) : \"Hmm, 35€ c'est un peu cher... Je sais pas trop.\"",
+                "Scénario 4 (Contenu Gratuit) : \"Tu peux m'en envoyer un petit truc gratuit pour me faire patienter ?\"",
+                "Scénario 5 (Changement Plateforme) : \"On peut continuer sur Snap ou Insta ? C'est plus simple.\""
+            ];
+            const situationalAnswerIds = [
+                'situational-answer1', 'situational-answer2', 'situational-answer3',
+                'situational-answer4', 'situational-answer5'
+            ];
+            situationalAnswerIds.forEach((id, index) => {
+                const answer = document.getElementById(id).value.trim();
+                emailBody += `${situationalQuestions[index]}:\n"${answer || 'Non répondu'}"\n\n`;
+            });
+
+            emailBody += `Partie 4 : Réflexion & Stratégie (Vos Réponses):\n`;
+            const reflectionQuestions = [
+                "1. Selon toi, quel est l'équilibre idéal entre \"construire une relation\" et \"vendre du contenu\" ?",
+                "2. Comment gérerais-tu un \"gros dépensier\" (un fan qui achète beaucoup) pour qu'il reste fidèle sur le long terme ?",
+                "3. Pourquoi est-il crucial de poser des questions aux fans et de les écouter attentivement ?"
+            ];
+            const reflectionAnswerIds = ['reflection-answer1', 'reflection-answer2', 'reflection-answer3'];
+            reflectionAnswerIds.forEach((id, index) => {
+                const answer = document.getElementById(id).value.trim();
+                emailBody += `${reflectionQuestions[index]}:\n"${answer || 'Non répondu'}"\n\n`;
+            });
+
+            emailBody += `Temps Total du Test: ${totalTime || 'Non renseigné'} minutes\n\n`;
+            emailBody += `Ce test a été complété via l'application de sélection des chatters.`;
+
+            // Encode subject and body for the mailto link
+            const subject = encodeURIComponent("Résultats du Test de Sélection Chatter - " + fullName);
+            const body = encodeURIComponent(emailBody);
+            const mailtoLink = `mailto:${recipientEmail}?subject=${subject}&body=${body}`;
+
+            try {
+                window.location.href = mailtoLink; // Attempt to open mail client
+                // Give a small delay to allow the mailto link to trigger
+                setTimeout(() => {
+                    // Check if the user is still on the same page (meaning mailto might not have worked)
+                    // This is a heuristic, not foolproof.
+                    if (document.visibilityState === 'visible') {
+                        openModal(emailBody); // Open fallback modal if mailto failed
+                    }
+                }, 1000); // 1 second delay
+            } catch (e) {
+                // Fallback if mailto link fails to open
+                openModal(emailBody);
+            }
+        }
+
+        // Function to open the fallback modal
+        function openModal(resultsText) {
+            document.getElementById('resultsToCopy').value = resultsText; // Populate textarea with results
+            document.getElementById('emailModal').style.display = 'flex'; // Show the modal
+        }
+
+        // Function to close the fallback modal
+        function closeModal() {
+            document.getElementById('emailModal').style.display = 'none'; // Hide the modal
+        }
+
+        // Function to copy results to clipboard
+        function copyResults() {
+            const resultsTextArea = document.getElementById('resultsToCopy');
+            resultsTextArea.select(); // Select the text
+            document.execCommand('copy'); // Copy to clipboard (deprecated but widely supported in iframes)
+            // Provide visual feedback to the user
+            const originalButtonText = event.target.textContent;
+            event.target.textContent = 'Copié !';
+            setTimeout(() => {
+                event.target.textContent = originalButtonText;
+            }, 1500);
+        }
+
+        // Initialize UI on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            updateUI();
+        });
+    </script>
+</body>
+</html>
+
